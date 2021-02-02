@@ -32,7 +32,7 @@
             </li>
             {% if request.user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+              <a class="nav-link" href="{% url 'profile-update' %}">Edit Profile</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'post-create' %}">New Post</a>
@@ -72,19 +72,28 @@
             {% endif %}
             {% block content %}{% endblock %}
           </div>
+          {% if request.user.is_authenticated %}
           <div class="col-md-4">
-            <div class="content-section">
-              <h3>Our Sidebar</h3>
-              <p class='text-muted'>You can put any information here you'd like.
+            <div class="d-flex justify-content-center content-section">
+              
                 <ul class="list-group">
-                  <li class="list-group-item list-group-item-light">Latest Posts</li>
-                  <li class="list-group-item list-group-item-light">Announcements</li>
-                  <li class="list-group-item list-group-item-light">Calendars</li>
-                  <li class="list-group-item list-group-item-light">etc</li>
+                  
+                    <img class=" account-img" src="{{ user.profile.image.url }}">
+                    <div class="media-body">
+                      <h2 class="account-heading">{{ user.username }}</h2>
+                      <p class="text-secondary">{{ user.email }}</p>
+                    </div>
+  
+                    {% if request.user.is_authenticated %}
+                      <a class="btn btn-info" href="{% url 'profile-update' %}">Edit Profile</a>
+                    {% endif %}
+                 
+
                 </ul>
               </p>
             </div>
           </div>
+          {% endif %}
         </div>
       </main>
     
