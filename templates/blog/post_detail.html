@@ -10,7 +10,7 @@
             <a class="mr-2" href="{% url 'user-posts' object.author.username %}">{{ object.author }}</a>
             <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
             {% if object.author == user %}
-            <span >
+            <span class="d-flex justify-end">
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
                 <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
             </span>
@@ -22,9 +22,9 @@
             <form action="{% url 'like_post' post.pk %}" method="POST">
               {% csrf_token %}
               {% if request.user.is_authenticated %}
-              <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-info btn-sm">Like</button>
+              <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">Like</button>
               {% else %}
-              <a href="{% url 'login' %}" class="btn btn-info btn-sm">Like</a>
+              <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Like</a>
               {% endif %}
               <span> {{ post.likes.count }} like(s)</span>
           </form>
