@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'm_gkl!=xext%4h2f(ujl$a4)dyczris9fh88r@2kb#oymhk)b2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['myblomg.herokuapp.com']
 
