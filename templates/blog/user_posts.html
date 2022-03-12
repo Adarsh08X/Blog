@@ -10,6 +10,28 @@
               <div class="article-metadata">
                 <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
                 <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+                <td>
+                  <div class="dropout">
+                      <button class="more">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                      </button>
+                      <ul class="option">
+                          {% if post.author == user %}
+                          <div style="border-bottom: 1px solid #727171;">
+                              <a href="{% url 'post-update' post.id %}">Update Post</a>
+                          </div>
+                          <div style="border-bottom: 1px solid #727171;">
+                              <a href="{% url 'post-delete' post.id %}">Delete Post</a>
+                          </div>
+                          {% endif %}
+                          <div>
+                              Bookmark
+                          </div>
+                      </ul>
+                  </div>
+              </td>
               </div>
               <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
               <p class="article-content">{{ post.content }}</p>
@@ -50,4 +72,22 @@
           {% endif %}
         {% endif %}
     </div>
+    <script>
+      // Script for drop down on multiple posts
+      var posts = document.querySelectorAll('.dropout');
+      console.log(posts);
+      for(var i = 0; i < posts.length; i++){
+        
+        posts[i].onclick = ({
+          target
+      }) => {
+          if (!target.classList.contains('more')) return
+          document.querySelectorAll('.dropout.active').forEach(
+              (d) => d !== target.parentElement && d.classList.remove('active')
+          )
+          target.parentElement.classList.toggle('active')
+      }
+      }
+      
+  </script>
 {% endblock  %}

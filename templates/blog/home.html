@@ -1,56 +1,95 @@
-
 {% extends "blog/base.html" %}
 
 {% block active_home %}active{% endblock %}
 {% block content %}
-    
-        {%for post in posts%}
-        <article class="media content-section">
-          <img class="rounded-circle article-img"src="{{ post.author.profile.image.url }}">
-            <div class="media-body">
-              <div class="article-metadata">
-                <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
-                <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
-              </div>
-              <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-              <p class="article-content">{{ post.content }}
-              <div>
-                <form action="{% url 'like_post' post.pk %}" method="POST">
-                  {% csrf_token %}
-                  {% if request.user.is_authenticated %}
-                  <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">Like</button>
-                  {% else %}
-                  <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Like</a>
-                  {% endif %}
-                  <span> {{ post.likes.count }} like(s)</span>
-              </form>
-              </div> 
-              </p>
+
+{%for post in posts%}
+<article class="media content-section">
+  <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+      <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+      <td>
+        <div class="dropout">
+          <button class="more">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <ul class="option">
+            {% if post.author == user %}
+            <div style="border-bottom: 1px solid #727171;">
+              <a href="{% url 'post-update' post.id %}">Update Post</a>
             </div>
-             
-          </article>
-        {% endfor %}
-        <div class="d-flex justify-content-center">
-        {% if is_paginated %}
-          {% if page_obj.has_previous %}
-            <a class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page=1">First</a>
-            <a class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-          {% endif %}
-          {% for num in page_obj.paginator.page_range %}
-
-            {% if page_obj.number == num %}
-              <a class="btn btn-info mb-4 mr-1 ml-1" href="?page={{ num }}">{{ num }}</a>
-            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <a class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page={{ num }}">{{ num }}</a>
-
+            <div style="border-bottom: 1px solid #727171;">
+              <a href="{% url 'post-delete' post.id %}">Delete Post</a>
+            </div>
             {% endif %}
-
-          {% endfor %}
-
-          {% if page_obj.has_next %}
-            <a class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page={{ page_obj.next_page_number }}">Next</a>
-            <a class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-          {% endif %}
+            <div>
+              Bookmark
+            </div>
+          </ul>
+        </div>
+      </td>
+    </div>
+    <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+    <p class="article-content">{{ post.content }}
+    <div>
+      <form action="{% url 'like_post' post.pk %}" method="POST">
+        {% csrf_token %}
+        {% if request.user.is_authenticated %}
+        <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">Like</button>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Like</a>
         {% endif %}
-      </div>
-{% endblock  %}
+        <span> {{ post.likes.count }} like(s)</span>
+      </form>
+    </div>
+    </p>
+  </div>
+
+</article>
+{% endfor %}
+<div class="d-flex justify-content-center">
+  {% if is_paginated %}
+  {% if page_obj.has_previous %}
+  <a class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page=1">First</a>
+  <a class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  {% endif %}
+  {% for num in page_obj.paginator.page_range %}
+
+  {% if page_obj.number == num %}
+  <a class="btn btn-info mb-4 mr-1 ml-1" href="?page={{ num }}">{{ num }}</a>
+  {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a
+    class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page={{ num }}">{{ num }}</a>
+
+    {% endif %}
+
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page={{ page_obj.next_page_number }}">Next</a>
+    <a class="btn btn-outline-info mb-4 mr-1 ml-1" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+    {% endif %}
+</div>
+<script>
+  // Script for drop down on multiple posts
+  var posts = document.querySelectorAll('.dropout');
+  console.log(posts);
+  for (var i = 0; i < posts.length; i++) {
+
+    posts[i].onclick = ({
+      target
+    }) => {
+      if (!target.classList.contains('more')) return
+      document.querySelectorAll('.dropout.active').forEach(
+        (d) => d !== target.parentElement && d.classList.remove('active')
+      )
+      target.parentElement.classList.toggle('active')
+    }
+  }
+
+</script>
+{% endblock %}

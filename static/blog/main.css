@@ -84,4 +84,52 @@ body {
     font-size: 2.5rem;
   }
 
+  .more {
+    /* cursor: pointer; */
+    border: none;
+    background: transparent;
+  }
   
+  .more span {
+    display: block;
+    width: .25rem;
+    height: .25rem;
+    background: #363636;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  
+  .more span:not(:last-child) {
+    margin-bottom: .125rem;
+  }
+  
+  .dropout {
+    float: right;
+    z-index: 9001;
+    width: fit-content;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .dropout ul {
+    position: absolute;
+    float: left;
+    background: #f8f5f5;
+    border-radius: 2%;
+    border: rgb(32, 8, 8);
+    top: -0.5rem;
+    right: 1.5rem;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.12s ease;
+    width: max-content;
+  }
+  
+  .dropout.active ul {
+    transform: scaleX(1);
+  }
+  .option{
+    padding: 15px;
+    border: 3px solid #272626;
+  }

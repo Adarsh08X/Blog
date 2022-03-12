@@ -9,27 +9,54 @@
         <div class="article-metadata">
             <a class="mr-2" href="{% url 'user-posts' object.author.username %}">{{ object.author }}</a>
             <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
-            {% if object.author == user %}
-            <span class="d-flex justify-end">
-                <a class="btn btn-secondary btn-sm m-1" href="{% url 'post-update' object.id %}">Update</a>
-                <a class="btn btn-danger btn-sm m-1" href="{% url 'post-delete' object.id %}">Delete</a>
-            </span>
-            {% endif %}
+            <td>
+                <div class="dropout">
+                    <button class="more">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <ul class="option">
+                        {% if object.author == user %}
+                        <div style="border-bottom: 1px solid #727171;">
+                            <a href="{% url 'post-update' object.id %}">Update Post</a>
+                        </div>
+                        <div style="border-bottom: 1px solid #727171;">
+                            <a href="{% url 'post-delete' object.id %}">Delete Post</a>
+                        </div>
+                        {% endif %}
+                        <div>
+                            Bookmark
+                        </div>
+                    </ul>
+                </div>
+            </td>
         </div>
         <h2 class="article-title">{{ object.title }}</h2>
         <p class="article-content">{{ object.content }}</p>
         <div>
             <form action="{% url 'like_post' post.pk %}" method="POST">
-              {% csrf_token %}
-              {% if request.user.is_authenticated %}
-              <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">Like</button>
-              {% else %}
-              <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Like</a>
-              {% endif %}
-              <span> {{ post.likes.count }} like(s)</span>
-          </form>
-          </div> 
+                {% csrf_token %}
+                {% if request.user.is_authenticated %}
+                <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">Like</button>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Like</a>
+                {% endif %}
+                <span> {{ post.likes.count }} like(s)</span>
+            </form>
+        </div>
     </div>
 </article>
-
+<script>
+    // Script for post drop down
+    document.querySelector('.dropout').onclick = ({
+        target
+    }) => {
+        if (!target.classList.contains('more')) return
+        document.querySelectorAll('.dropout.active').forEach(
+            (d) => d !== target.parentElement && d.classList.remove('active')
+        )
+        target.parentElement.classList.toggle('active')
+    }
+</script>
 {% endblock %}
