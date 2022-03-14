@@ -27,7 +27,7 @@ SECRET_KEY = 'm_gkl!=xext%4h2f(ujl$a4)dyczris9fh88r@2kb#oymhk)b2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['myblomg.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -79,7 +79,10 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://localhost')
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR + '/db.sqlite3',
+    }
 }
 
 
@@ -123,13 +126,12 @@ USE_TZ = True
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+STATIC_URL = '/static/'
 STATCI_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
-MEDIA_URL = '/static/'
-
-MEDIA_ROOT =  BASE_DIR/'media'
-
 MEDIA_URL = '/media/'
+
+MEDIA_ROOT =  BASE_DIR+'/media'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
