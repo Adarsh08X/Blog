@@ -1,12 +1,16 @@
+from urllib import response
+from xml.etree.ElementTree import Comment
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.http import HttpResponse
-from .models import Post
+from .models import *
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+import logging
 
+logger = logging.getLogger(__name__)
 # Create your views here.
 
 def home(request):
@@ -37,9 +41,21 @@ class UserPostListView(ListView):
     
     
 
+def get_post(request,pk):
+    # post_id = request.id
+    logger.info('$$$$$$$$$$$$$$$$$$$')
+    post = Post.objects.get(id = pk)
+    comments = Comment.objects.get(post = post)
+    print(comments)
+    context = {
+        'post': post,
+        'comment': comments
+    }
+    
+    return render(request, 'blog/post_detail.html',context=context)
 
-class PostDetailView(DetailView):
-    model  = Post
+# class PostDetailView(DetailView):
+#     model = Post
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
