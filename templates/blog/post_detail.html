@@ -46,21 +46,30 @@
             </form>
         </div>
     </div>
-    
 </article>
-<article class="media content-section">
+<form id="usrform" method="POST">
+    {% csrf_token %}
+    <textarea class="comment-form" name="comment" id="comment" form="usrform" placeholder="Leave a comment..."></textarea>
+    <button class="btn btn-info my-1" type="submit">Comment</button>
+  </form>
+  
+
+<h4>Comments</h4>
+{% for comment in comments %}
+<article class="media comment-section">
+    
     <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}">
     <div class="media-body">
         <div class="article-metadata">
             <a class="mr-2" href="{% url 'user-posts' comment.author.username %}">{{ comment.author }}</a>
-            <small class="text-muted">{{ comment.date_posted|date:"F d, Y" }}</small>
+            <small class="text-muted">{{ comment.created_on|date:"F d, Y" }}</small>
         </div>
         <p class="article-content">{{comment.body}}</p>
         
     </div>
-    
+   
 </article>
-
+{% endfor %}
 <script>
     // Script for post drop down
     document.querySelector('.dropout').onclick = ({

@@ -45,11 +45,20 @@ def get_post(request,pk):
     # post_id = request.id
     logger.info('$$$$$$$$$$$$$$$$$$$')
     post = Post.objects.get(id = pk)
-    comments = Comment.objects.get(post = post)
+    if request.method =='POST':
+        author = request.user
+        body = request.POST.get('comment')
+        comment = Comment(author=author,body=body,post=post)
+        comment.save()
+        print(author)
+        print('###########')
+        print(request.POST.get('comment'))
+        # return redirect('/')
+    comments = Comment.objects.filter(post = post).order_by('-created_on')
     print(comments)
     context = {
         'post': post,
-        'comment': comments
+        'comments': comments
     }
     
     return render(request, 'blog/post_detail.html',context=context)
@@ -99,3 +108,7 @@ def likes(request,pk):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
     post.likes.add(request.user)
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+def save_comment(request):
+
+    return {'post':'post'}
