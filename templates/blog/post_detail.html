@@ -35,16 +35,21 @@
         <h2 class="article-title">{{ post.title }}</h2>
         <p class="article-content">{{ post.content }}</p>
         <div>
+            <div style="float: left;padding-right: 20px;">
             <form action="{% url 'like_post' post.pk %}" method="POST">
-                {% csrf_token %}
-                {% if request.user.is_authenticated %}
-                <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">Like</button>
-                {% else %}
-                <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Like</a>
-                {% endif %}
-                <span> {{ post.likes.count }} like(s)</span>
+              {% csrf_token %}
+              {% if request.user.is_authenticated %}
+              <button type="submit" name="post_id" value="{{ post.id }}" class="like-button"><img height="35px" width="40px" src="/media/like/like.png"></button>
+              {% else %}
+              <a href="{% url 'login' %}" class="like-button"><img height="35px" width="40px" src="/media/like/like.png"></a>
+              {% endif %}
+              <span> {{ post.likes.count }} like(s)</span>
             </form>
-        </div>
+          </div>
+            <div style="float: left;">
+              <a class="article-title" href="{% url 'post-detail' post.id %}"><img height="32px" width="37px" style="margin-right: 10px;" src="/media/comment.png">Comment</a>
+            </div>
+          </div>
     </div>
 </article>
 <form id="usrform" method="POST">
