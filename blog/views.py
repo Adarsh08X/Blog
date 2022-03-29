@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.http import HttpResponse
+from matplotlib.pyplot import title
 from .models import *
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
@@ -109,6 +110,28 @@ def likes(request,pk):
     post.likes.add(request.user)
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
-def save_comment(request):
 
-    return {'post':'post'}
+
+def search(request):
+    query = request.GET.get('query', '')
+
+    if len(query) > 0:
+        users = User.objects.filter(username__icontains=query)
+        posts = Post.objects.all()
+        titles = []
+        for i in posts:
+            Title = i.title.lower()
+            check = query.lower()
+            if check in Title:
+                titles.append(i)
+    else:
+        users = []
+        titles = []
+
+    context = {
+        'query': query,
+        'users': users,
+        'posts': titles
+    }
+
+    return render(request, 'blog/search.html', context)

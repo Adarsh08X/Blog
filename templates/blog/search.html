@@ -1,0 +1,59 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Search{% endblock %}
+
+
+{% block content %}
+
+<div class="search2">
+    <div class="heading">
+        <h5>Search</h5>
+    </div>
+    <form class="form-inline my-2 my-lg-0 d-flex justify-content-center" method="get" action="{% url 'search' %}">
+        <input class="form-control mr-sm-2" name="query" value="{{ query }}" type="search" placeholder="Search"
+            aria-label="Search" style="width: 60%; box-shadow: none!important; border-color: #b0b0b0;" required>
+        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" href="{% url 'search' %}">Search</button>
+    </form>
+
+    <b style="padding-top: 20px;">Search Keyword : "{{ query }}"</b>
+    {% if users.lenght%}
+    <h2>Users</h2>
+    {% endif %}
+
+    {% for user in users %}
+    <article class="media content-section">
+        <div class="srch justify-content-between">
+            <figure class="media-left">
+                <p class="image ">
+                    <img class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+
+                    <small style="padding-left: 5px"><a href="{% url 'user-posts' user.username %}">{{ user }}</a>
+                    </small>
+                </p>
+            </figure>
+
+        </div>
+    </article>
+    {% endfor %}
+    {% if posts.lenght%}
+    <h2>Users</h2>
+    {% endif %}
+    
+    {% for post in posts %}
+    <article class="media content-section">
+        <div class="srch justify-content-between">
+            <figure class="media-left">
+                <p class="image ">
+                    <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+
+                    <small style="padding-left: 5px"><a href="{% url 'post-detail' post.id %}">{{ post.title}}</a></small>
+                </p>
+            </figure>
+
+        </div>
+    </article>
+    {% endfor %}
+
+
+</div>
+{% endblock %}
