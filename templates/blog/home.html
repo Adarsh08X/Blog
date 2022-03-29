@@ -26,27 +26,37 @@
               <a href="{% url 'post-delete' post.id %}">Delete Post</a>
             </div>
             {% endif %}
-            
+
           </ul>
         </div>
       </td>
     </div>
     <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-    <p class="article-content">{{ post.content }}>
+    <p class="article-content">{{ post.content }}</p>
     <div>
       <div style="float: left;padding-right: 20px;">
-      <form action="{% url 'like_post' post.pk %}" method="POST">
-        {% csrf_token %}
+
+        
         {% if request.user.is_authenticated %}
-        <button type="submit" name="post_id" value="{{ post.id }}" class="like-button"><img height="35px" width="40px" src="../media/like/like.png"></button>
+        {% if request.user in post.likes.all %}
+        <form action="{% url 'unlike_post' post.pk %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" name="post_id" value="{{ post.id }}" class="like-button"><img height="35px" width="40px" src="../media/like/liked.png"></button>
+        </form>        
+        {%else%}
+        <form action="{% url 'like_post' post.pk %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" name="post_id" value="{{ post.id }}" class="like-button"><img height="35px" width="40px" src="../media/like/like.png"></button>
+        </form>
+        {%endif%}
         {% else %}
         <a href="{% url 'login' %}" class="like-button"><img height="35px" width="40px" src="../media/like/like.png"></a>
         {% endif %}
-        <span> {{ post.likes.count }} like(s)</span>
-      </form>
-    </div>
-      <div style="float: left;">
-        <a class="article-title" href="{% url 'post-detail' post.id %}"><img height="32px" width="37px" style="margin-right: 10px;" src="../media/comment.png">Comment</a>
+      </div>
+      <div style="float: left;"> {{ post.likes.count }} </div>
+      <div style="float: right;">
+        <a class="article-title" href="{% url 'post-detail' post.id %}"><img height="32px" width="37px"
+            style="margin-right: 10px;" src="../media/comment.png">Comment</a>
       </div>
     </div>
     </p>

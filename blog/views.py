@@ -110,7 +110,10 @@ def likes(request,pk):
     post.likes.add(request.user)
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
-
+def unlike(request,pk):
+    post = get_object_or_404(Post, id=request.POST.get('post_id'))
+    post.likes.remove(request.user)
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 def search(request):
     query = request.GET.get('query', '')

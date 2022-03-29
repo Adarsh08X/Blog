@@ -25,7 +25,7 @@
                             <a href="{% url 'post-delete' post.id %}">Delete Post</a>
                         </div>
                         {% endif %}
-                        
+
                     </ul>
                 </div>
             </td>
@@ -34,33 +34,47 @@
         <p class="article-content">{{ post.content }}</p>
         <div>
             <div style="float: left;padding-right: 20px;">
-            <form action="{% url 'like_post' post.pk %}" method="POST">
-              {% csrf_token %}
-              {% if request.user.is_authenticated %}
-              <button type="submit" name="post_id" value="{{ post.id }}" class="like-button"><img height="35px" width="40px" src="/media/like/like.png"></button>
-              {% else %}
-              <a href="{% url 'login' %}" class="like-button"><img height="35px" width="40px" src="/media/like/like.png"></a>
-              {% endif %}
-              <span> {{ post.likes.count }} like(s)</span>
-            </form>
-          </div>
-            <div style="float: left;">
-              <a class="article-title" href="{% url 'post-detail' post.id %}"><img height="32px" width="37px" style="margin-right: 10px;" src="/media/comment.png">Comment</a>
+
+
+                {% if request.user.is_authenticated %}
+                {% if request.user in post.likes.all %}
+                <form action="{% url 'unlike_post' post.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="post_id" value="{{ post.id }}" class="like-button"><img height="35px"
+                            width="40px" src="/media/like/liked.png"></button>
+                </form>
+                {%else%}
+                <form action="{% url 'like_post' post.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="post_id" value="{{ post.id }}" class="like-button"><img height="35px"
+                            width="40px" src="/media/like/like.png"></button>
+                </form>
+                {%endif%}
+                {% else %}
+                <a href="{% url 'login' %}" class="like-button"><img height="35px" width="40px"
+                        src="/media/like/like.png"></a>
+                {% endif %}
             </div>
-          </div>
+            <div style="float: left;"> {{ post.likes.count }} </div>
+            <div style="float: right;">
+                <a class="article-title" href="{% url 'post-detail' post.id %}"><img height="32px" width="37px"
+                        style="margin-right: 10px;" src="/media/comment.png">Comment</a>
+            </div>
+        </div>
     </div>
 </article>
 <form id="usrform" method="POST">
     {% csrf_token %}
-    <textarea class="comment-form" name="comment" id="comment" form="usrform" placeholder="Leave a comment..."></textarea>
+    <textarea class="comment-form" name="comment" id="comment" form="usrform" placeholder="Leave a comment..."
+        required></textarea>
     <button class="btn btn-info my-1" type="submit">Comment</button>
-  </form>
-  
+</form>
+
 
 <h4>Comments</h4>
 {% for comment in comments %}
 <article class="media comment-section">
-    
+
     <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}">
     <div class="media-body">
         <div class="article-metadata">
@@ -68,9 +82,9 @@
             <small class="text-muted">{{ comment.created_on|date:"F d, Y" }}</small>
         </div>
         <p class="article-content">{{comment.body}}</p>
-        
+
     </div>
-   
+
 </article>
 {% endfor %}
 <script>
